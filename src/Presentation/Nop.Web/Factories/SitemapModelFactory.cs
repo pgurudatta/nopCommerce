@@ -497,7 +497,7 @@ namespace Nop.Web.Factories
             //split URLs into separate lists based on the max size 
             var sitemaps = sitemapUrls
                 .Select((url, index) => new { Index = index, Value = url })
-                .GroupBy(group => group.Index / NopSeoDefaults.SitemapMaxUrlNumber)
+                .GroupBy(group => group.Index * (group.Value.AlternateLocations?.Count ?? 0 + 1) / NopSeoDefaults.SitemapMaxUrlNumber)
                 .Select(group => group
                     .Select(url => url.Value)
                     .ToList()).ToList();
@@ -824,7 +824,7 @@ namespace Nop.Web.Factories
                 ? await _languageService.GetAllLanguagesAsync(storeId: store.Id)
                 : null;
 
-            if (languages == null)
+            if (languages == null || languages.Count == 1)
                 return new SitemapUrlModel(url, new List<string>(), updateFreq, updatedOn);
 
             var pathBase = _actionContextAccessor.ActionContext.HttpContext.Request.PathBase;
