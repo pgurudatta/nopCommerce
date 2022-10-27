@@ -531,6 +531,9 @@ namespace Nop.Web.Factories
                 }
             }
 
+            if (_nopFileProvider.FileExists(fullPath))
+                _nopFileProvider.DeleteFile(fullPath);
+
             using var fileStream = _nopFileProvider.GetOrCreateFile(fullPath);
             stream.Position = 0;
             await stream.CopyToAsync(fileStream, 81920);
