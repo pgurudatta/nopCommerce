@@ -48,7 +48,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 catalogSettings.DisplayAllPicturesOnCatalogPages = false;
                 settingService.SaveSettingAsync(catalogSettings, settings => settings.DisplayAllPicturesOnCatalogPages).Wait();
             }
-            
+
             //#3511
             var newProductsNumber = settingService.GetSettingAsync("catalogsettings.newproductsnumber").Result;
             if (newProductsNumber is not null && int.TryParse(newProductsNumber.Value, out var newProductsPageSize))
@@ -131,6 +131,13 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(mediaSettings, settings => settings.OrderThumbPictureSize).Wait();
             }
 
+            var adminSettings = settingService.LoadSettingAsync<AdminAreaSettings>().Result;
+            if (!settingService.SettingExistsAsync(adminSettings, settings => settings.CheckLicense).Result)
+            {
+                adminSettings.CheckLicense = true;
+                settingService.SaveSettingAsync(adminSettings, settings => settings.CheckLicense).Wait();
+            }
+
             var gdprSettings = settingService.LoadSettingAsync<GdprSettings>().Result;
 
             //#5809
@@ -148,7 +155,7 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 captchaSettings.ShowOnCheckoutPageForGuests = false;
                 settingService.SaveSettingAsync(captchaSettings, settings => settings.ShowOnCheckoutPageForGuests).Wait();
             }
-            
+
             //#7
             if (!settingService.SettingExistsAsync(mediaSettings, settings => settings.VideoIframeAllow).Result)
             {
@@ -269,9 +276,9 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSettingAsync(robotsTxtSettings, settings => settings.LocalizableDisallowPaths).Wait();
             }
 
-            if (!settingService.SettingExistsAsync(robotsTxtSettings, settings => settings.DisallowLanguages).Result) 
+            if (!settingService.SettingExistsAsync(robotsTxtSettings, settings => settings.DisallowLanguages).Result)
                 settingService.SaveSettingAsync(robotsTxtSettings, settings => settings.DisallowLanguages).Wait();
-            
+
             if (!settingService.SettingExistsAsync(robotsTxtSettings, settings => settings.AdditionsRules).Result)
                 settingService.SaveSettingAsync(robotsTxtSettings, settings => settings.AdditionsRules).Wait();
 

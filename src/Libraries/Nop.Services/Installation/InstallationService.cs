@@ -2840,7 +2840,7 @@ namespace Nop.Services.Installation
                 RichEditorAllowStyleTag = false,
                 UseRichEditorForCustomerEmails = false,
                 UseRichEditorInMessageTemplates = false,
-                CheckCopyrightRemovalKey = true,
+                CheckLicense = true,
                 UseIsoDateFormatInJsonResult = true,
                 ShowDocumentationReferenceLinks = true
             });
@@ -3122,7 +3122,9 @@ namespace Nop.Services.Installation
 
             await settingService.SaveSettingAsync(new ExternalAuthenticationSettings
             {
-                RequireEmailValidation = false, LogErrors = false, AllowCustomersToRemoveAssociations = true
+                RequireEmailValidation = false,
+                LogErrors = false,
+                AllowCustomersToRemoveAssociations = true
             });
 
             await settingService.SaveSettingAsync(new RewardPointsSettings
@@ -3168,7 +3170,10 @@ namespace Nop.Services.Installation
 
             await settingService.SaveSettingAsync(new MessageTemplatesSettings
             {
-                CaseInvariantReplacement = false, Color1 = "#b9babe", Color2 = "#ebecee", Color3 = "#dde2e6"
+                CaseInvariantReplacement = false,
+                Color1 = "#b9babe",
+                Color2 = "#ebecee",
+                Color3 = "#dde2e6"
             });
 
             await settingService.SaveSettingAsync(new ShoppingCartSettings
@@ -3318,7 +3323,8 @@ namespace Nop.Services.Installation
 
             await settingService.SaveSettingAsync(new DateTimeSettings
             {
-                DefaultStoreTimeZoneId = string.Empty, AllowCustomersToSetTimeZone = false
+                DefaultStoreTimeZoneId = string.Empty,
+                AllowCustomersToSetTimeZone = false
             });
 
             await settingService.SaveSettingAsync(new BlogSettings
@@ -9202,6 +9208,15 @@ namespace Nop.Services.Installation
                     Name = "Keep alive",
                     Seconds = 300,
                     Type = "Nop.Services.Common.KeepAliveTask, Nop.Services",
+                    Enabled = true,
+                    LastEnabledUtc = lastEnabledUtc,
+                    StopOnError = false
+                },
+                new ScheduleTask
+                {
+                    Name = nameof(ResetLicenseCheckTask),
+                    Seconds = 2073600,
+                    Type = "Nop.Services.Common.ResetLicenseCheckTask, Nop.Services",
                     Enabled = true,
                     LastEnabledUtc = lastEnabledUtc,
                     StopOnError = false
